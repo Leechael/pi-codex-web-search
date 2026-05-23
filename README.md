@@ -117,6 +117,7 @@ Full schema (all fields optional):
 
 ```json
 {
+  "enabled": true,
   "toolName": "codex_search",
   "model": "gpt-5-codex",
   "baseUrl": "https://chatgpt.com/backend-api",
@@ -126,16 +127,21 @@ Full schema (all fields optional):
 }
 ```
 
+Set `enabled` to `false` to skip tool registration entirely (the model will not see `codex_search` at all). Useful for projects where you do not want this extension active even though it is installed globally.
+
 Environment variable equivalents:
 
 | Field               | Env var                              |
 | ------------------- | ------------------------------------ |
+| `enabled`           | `PI_CODEX_WEB_SEARCH_ENABLED`        |
 | `toolName`          | `PI_CODEX_WEB_SEARCH_TOOL_NAME`      |
 | `model`             | `PI_CODEX_WEB_SEARCH_MODEL`          |
 | `baseUrl`           | `PI_CODEX_WEB_SEARCH_BASE_URL`       |
 | `clientVersion`     | `PI_CODEX_WEB_SEARCH_CLIENT_VERSION` |
 | `searchContextSize` | `PI_CODEX_WEB_SEARCH_CONTEXT_SIZE`   |
 | `freshness`         | `PI_CODEX_WEB_SEARCH_FRESHNESS`      |
+
+`PI_CODEX_WEB_SEARCH_ENABLED` accepts `true` / `false` (case-insensitive); any other value throws on load.
 
 ### Slash command
 
