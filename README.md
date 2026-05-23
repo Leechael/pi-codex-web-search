@@ -97,21 +97,59 @@ The tool returns text plus a `Sources:` section when citations are available. Th
 
 The search request needs a Codex model id. The extension chooses it in this order:
 
-1. `PI_CODEX_WEB_SEARCH_MODEL`, if set.
+1. `model` from env / project / home configuration, if set.
 2. The active Pi model, if it comes from the `openai-codex` provider.
 3. The default model from Codex's `/codex/models` response.
 
 Most users do not need to set anything.
 
-## Common knobs
+## Configuration
 
-Most users only need `/login openai-codex`. These env vars are here for debugging or custom setups:
+Settings are merged from three layers, highest precedence first:
 
-- `PI_CODEX_WEB_SEARCH_MODEL` — force the Codex model used by the tool.
-- `PI_CODEX_WEB_SEARCH_CONTEXT_SIZE` — default search context size: `low`, `medium`, or `high`.
-- `PI_CODEX_WEB_SEARCH_FRESHNESS` — default freshness when the tool call omits it: `live` or `cached`.
-- `PI_CODEX_WEB_SEARCH_BASE_URL` — override the Codex backend base URL.
-- `PI_CODEX_WEB_SEARCH_CLIENT_VERSION` — override the `client_version` sent to `/codex/models`.
+1. Environment variables (table below).
+2. Project file: `<cwd>/.pi/pi-codex-search.json`.
+3. Home file: `~/.pi/pi-codex-search.json`.
+
+Each layer is optional. Missing files are skipped silently; malformed JSON or invalid values throw on load.
+
+Full schema (all fields optional):
+
+```json
+{
+  "toolName": "codex_search",
+  "model": "gpt-5-codex",
+  "baseUrl": "https://chatgpt.com/backend-api",
+  "clientVersion": "1.0.0",
+  "searchContextSize": "medium",
+  "freshness": "live"
+}
+```
+
+Environment variable equivalents:
+
+| Field               | Env var                              |
+| ------------------- | ------------------------------------ |
+| `toolName`          | `PI_CODEX_WEB_SEARCH_TOOL_NAME`      |
+| `model`             | `PI_CODEX_WEB_SEARCH_MODEL`          |
+| `baseUrl`           | `PI_CODEX_WEB_SEARCH_BASE_URL`       |
+| `clientVersion`     | `PI_CODEX_WEB_SEARCH_CLIENT_VERSION` |
+| `searchContextSize` | `PI_CODEX_WEB_SEARCH_CONTEXT_SIZE`   |
+| `freshness`         | `PI_CODEX_WEB_SEARCH_FRESHNESS`      |
+
+### Slash command
+
+`/codex-search` opens an interactive settings dialog (in interactive mode). Subcommands:
+
+- `/codex-search` — open the main dialog (project / home config editors, reset menu).
+- `/codex-search status` — print the merged configuration and which layers contributed.
+- `/codex-search reset` — open the reset menu (delete project or home config file).
+
+Each edit writes the matching scope file immediately. On dialog close, the extension calls `ctx.reload()` so the new `toolName` and defaults apply without restarting pi.
+
+### Renaming the tool
+
+The most common reason to use configuration is to avoid colliding with another extension that registers `codex_search` (or whatever default you picked). Set `toolName` in either config file or via env to expose this extension under a different name. Tool names must match `[a-zA-Z_][a-zA-Z0-9_]{0,63}`.
 
 ## Notes
 
@@ -145,7 +183,11 @@ The stored OAuth credential did not include an account id, and the extension cou
 
 ### Search uses the wrong model
 
-Set `PI_CODEX_WEB_SEARCH_MODEL` to the Codex model id you want. If unset, the extension uses the active Codex model when possible, then falls back to the default model from `/codex/models`.
+Set `model` in your config file (or `PI_CODEX_WEB_SEARCH_MODEL`) to the Codex model id you want. If unset, the extension uses the active Codex model when possible, then falls back to the default model from `/codex/models`.
+
+### A different extension already registers `codex_search`
+
+Use `/codex-search` to rename this extension's tool (or set `toolName` in `~/.pi/pi-codex-search.json`). Reload pi to apply.
 
 ## Development
 
