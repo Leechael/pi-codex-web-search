@@ -139,11 +139,11 @@ Environment variable equivalents:
 
 ### Slash command
 
-`/codex-search` opens an interactive settings dialog (in interactive mode). Subcommands:
+`/codex-search-settings` opens an interactive settings dialog (in interactive mode). Subcommands:
 
-- `/codex-search` — open the main dialog (project / home config editors, reset menu).
-- `/codex-search status` — print the merged configuration and which layers contributed.
-- `/codex-search reset` — open the reset menu (delete project or home config file).
+- `/codex-search-settings` — open the main dialog (project / home config editors, reset menu).
+- `/codex-search-settings status` — print the merged configuration and which layers contributed.
+- `/codex-search-settings reset` — open the reset menu (delete project or home config file).
 
 Each edit writes the matching scope file immediately. On dialog close, the extension calls `ctx.reload()` so the new `toolName` and defaults apply without restarting pi.
 
@@ -187,7 +187,7 @@ Set `model` in your config file (or `PI_CODEX_WEB_SEARCH_MODEL`) to the Codex mo
 
 ### A different extension already registers `codex_search`
 
-Use `/codex-search` to rename this extension's tool (or set `toolName` in `~/.pi/pi-codex-search.json`). Reload pi to apply.
+Use `/codex-search-settings` to rename this extension's tool (or set `toolName` in `~/.pi/pi-codex-search.json`). Reload pi to apply.
 
 ## Development
 

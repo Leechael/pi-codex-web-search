@@ -15,7 +15,7 @@ import {
 } from "./config.ts";
 import type { SearchContextSize } from "./codex.ts";
 
-const COMMAND_NAME = "codex-search";
+const COMMAND_NAME = "codex-search-settings";
 const SUBCOMMANDS = ["status", "reset"] as const;
 
 export function registerSettingsCommand(pi: ExtensionAPI): void {
