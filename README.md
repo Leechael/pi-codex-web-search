@@ -3,7 +3,7 @@
 [![npm](https://img.shields.io/npm/v/pi-codex-search)](https://www.npmjs.com/package/pi-codex-search)
 [![license](https://img.shields.io/npm/l/pi-codex-search)](./LICENSE)
 
-**Give Pi a `web_search` tool through your Codex subscription.**
+**Give Pi a `codex_search` tool through your Codex subscription.**
 
 Pi is the harness. Codex already has a ChatGPT-backed search path. This package connects the two: it adds a normal Pi tool that searches the web through the `openai-codex` account you already use in Pi.
 
@@ -22,7 +22,7 @@ This extension is for the cases where your Pi workflow needs fresh or source-bac
 
 ## What this package adds
 
-- **A `web_search` tool** — query the web from inside Pi.
+- **A `codex_search` tool** — query the web from inside Pi.
 - **Codex auth reuse** — reads the same `openai-codex` credential that Pi stores after `/login openai-codex`.
 - **No manual token handling** — the extension does not read `ACCESS_TOKEN` during normal Pi usage.
 - **Model selection that follows Pi** — use an explicit env override, the active Codex model, or the default model from Codex's model list.
@@ -62,7 +62,7 @@ Inside Pi, run:
 
 Choose `ChatGPT Plus/Pro (Codex Subscription)` if Pi asks which provider to use. Pi stores and refreshes the credential.
 
-The extension always registers `web_search`. If Pi has no `openai-codex` token, or if the ChatGPT account id cannot be recovered from the stored OAuth credential or decoded access token, the tool fails on first call with an `auth`-kind error pointing the user at `/login openai-codex`.
+The extension always registers `codex_search`. If Pi has no `openai-codex` token, or if the ChatGPT account id cannot be recovered from the stored OAuth credential or decoded access token, the tool fails on first call with an `auth`-kind error pointing the user at `/login openai-codex`.
 
 ## Tool
 
@@ -70,7 +70,7 @@ The extension registers one tool:
 
 ```json
 {
-  "name": "web_search",
+  "name": "codex_search",
   "arguments": {
     "queries": ["latest OpenAI Codex release notes"],
     "search_context_size": "medium",
@@ -117,7 +117,7 @@ Most users only need `/login openai-codex`. These env vars are here for debuggin
 
 ### Codex search vs model search
 
-This does not add browsing to the model provider itself. It adds a Pi tool. The model decides when to call `web_search`, just like any other tool.
+This does not add browsing to the model provider itself. It adds a Pi tool. The model decides when to call `codex_search`, just like any other tool.
 
 ### Account id
 
@@ -129,7 +129,7 @@ The extension builds the Codex request headers itself, including `Authorization`
 
 ## Troubleshooting
 
-### `web_search` fails with an `auth`-kind error
+### `codex_search` fails with an `auth`-kind error
 
 The tool is always registered, but the first call fails when Pi has no `openai-codex` token or the ChatGPT account id cannot be recovered. Run:
 
@@ -139,7 +139,7 @@ The tool is always registered, but the first call fails when Pi has no `openai-c
 
 If Pi asks for a provider, choose `ChatGPT Plus/Pro (Codex Subscription)`. The extension picks up the refreshed credential on the next call.
 
-### `web_search` says the account id was not found
+### `codex_search` says the account id was not found
 
 The stored OAuth credential did not include an account id, and the extension could not decode one from the access token. Re-run `/login openai-codex` so Pi refreshes the credential.
 

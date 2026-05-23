@@ -64,13 +64,13 @@ interface WebSearchDetails {
 }
 
 const webSearchTool = defineTool({
-  name: "web_search",
-  label: "Web Search",
+  name: "codex_search",
+  label: "Codex Search",
   description:
     "Search the web using the user's configured ChatGPT Codex subscription. Accepts one or more queries in a single call; results are returned grouped by query with sources.",
-  promptSnippet: "web_search: search the web using the configured ChatGPT Codex subscription.",
+  promptSnippet: "codex_search: search the web using the configured ChatGPT Codex subscription.",
   promptGuidelines: [
-    "Use web_search when current or source-backed information is needed.",
+    "Use codex_search when current or source-backed information is needed.",
     `Batch up to ${MAX_QUERIES} related queries in one call when grouped comparison matters; use separate calls when independent results unblock the next step.`,
     "Do not ask the user for an access token; the tool uses pi's configured OpenAI Codex subscription.",
   ],
@@ -202,7 +202,7 @@ const webSearchTool = defineTool({
       const summary =
         failures.length === 1
           ? (primary?.message ?? "Codex web search failed")
-          : `All ${failures.length} web_search queries failed: ${failures
+          : `All ${failures.length} codex_search queries failed: ${failures
               .map((f, i) => `${i + 1}. [${f.kind}] ${f.message}`)
               .join("; ")}`;
       const err = new Error(summary) as Error & {
@@ -233,7 +233,7 @@ const webSearchTool = defineTool({
     const fresh = (args.freshness as string | undefined) ?? DEFAULT_FRESHNESS;
     const ctxSize = (args.search_context_size as string | undefined) ?? DEFAULT_CONTEXT_SIZE;
 
-    let text = theme.fg("toolTitle", theme.bold("web_search "));
+    let text = theme.fg("toolTitle", theme.bold("codex_search "));
     if (queries.length === 1) {
       text += theme.fg("accent", formatInline(queries[0] ?? "", 90));
     } else {
